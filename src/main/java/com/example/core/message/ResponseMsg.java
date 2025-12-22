@@ -20,6 +20,11 @@ public class ResponseMsg<T> extends ResponseEntity<ResponseMsg.WrapContent<T>> {
         return new ResponseMsg<>(wrapContent, httpStatus);
     }
 
+    public static ResponseMsg<Object> newResponse(ResultCode resultCode) {
+        WrapContent<Object> wrapContent = new WrapContent<>(resultCode);
+        return new ResponseMsg<>(wrapContent, resultCode.getHttpStatus());
+    }
+
     public static ResponseMsg<Object> newOKResponse() {
         WrapContent<Object> wrapContent = new WrapContent<>(ResultCode.SUCCESS);
         return new ResponseMsg<>(wrapContent, ResultCode.SUCCESS.getHttpStatus());
