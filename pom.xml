@@ -9,10 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>core</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>core</name>
-	<description>Core</description>
+	<artifactId>base-lib</artifactId>
+	<version>0.0.1</version>
+	<name>base-lib</name>
+	<description>Base lib</description>
+    <packaging>pom</packaging>
 	<url/>
 	<licenses>
 		<license/>
@@ -29,6 +30,9 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+    <modules>
+        <module>lib-core</module>
+    </modules>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
