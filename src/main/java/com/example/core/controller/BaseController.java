@@ -67,6 +67,13 @@ public abstract class BaseController<Bean, ID, Repository extends BaseRepo<Bean,
         return ResponseMsg.new500ErrorResponse();
     }
 
+    public ResponseMsg<?> createAll(List<Bean> beans) throws Exception {
+        if (this.getService().saveAllBeans(beans)) {
+            return ResponseMsg.newOKResponse(beans);
+        }
+        return ResponseMsg.new500ErrorResponse();
+    }
+
     public ResponseMsg<?> update(ID id, Bean bean) throws Exception {
         if (id != null && this.getService().findById(id) != null) {
             Bean currentBean = (Bean) this.getService().findById(id);

@@ -20,5 +20,7 @@ public interface CRUDService<Bean, ID, Repository extends BaseRepo<Bean, ID>> {
 
     boolean saveBean(Bean bean) throws Exception;
 
+    boolean saveAllBeans(List<Bean> beans) throws Exception;
+
     boolean deleteById(ID id) throws Exception;
 }
