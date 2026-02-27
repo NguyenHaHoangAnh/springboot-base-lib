@@ -1,16 +1,14 @@
 package com.example.lib.auth.util;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
+@ConfigurationProperties(prefix = "auth")
 public class AuthUtils {
-    @Value("${auth.token-url}")
     private String tokenUrl;
 
-    @Value("${auth.login-url}")
     private String loginUrl;
 
-    @Value("${auth.permit-urls}")
     private String[] permitUrls;
 }

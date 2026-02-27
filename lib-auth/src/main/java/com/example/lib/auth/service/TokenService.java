@@ -16,11 +16,11 @@ import org.springframework.web.client.RestTemplate;
 @AllArgsConstructor
 @Slf4j
 public class TokenService {
-    private final RestTemplate restTemplate;
-
     private final AuthUtils authUtils;
 
-    private final AntPathMatcher antPathMatcher;
+    private final RestTemplate restTemplate;
+
+    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     // Hàm này gọi sang auth service: api/v1/auth/token để verify token
     public TokenResponseDto getToken(String accessToken, String requestUrl, String requestMethod) throws Exception {
