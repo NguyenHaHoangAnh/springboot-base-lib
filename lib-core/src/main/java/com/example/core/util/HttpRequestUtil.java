@@ -135,13 +135,13 @@ public class HttpRequestUtil {
         reader.close();
         String jsonResponse = response.toString();
         if (responseCode < 200 || responseCode > 299) {
-            log.error("Http request: url={}, payload={}, response={}", new Object[]{url, null, jsonResponse});
+            log.error("[Http request] url={}, payload={}, response={}", new Object[]{url, null, jsonResponse});
             if (exceptionOnError) {
                 throw new Exception("INTERNAL_SERVER_ERROR");
             }
         }
 
-        log.info("Http request: url={}, method={}, status={}, time={}ms", new Object[]{url, requestType, responseCode, System.currentTimeMillis() - start});
+        log.info("[Http request] url={}, method={}, status={}, time={}ms", new Object[]{url, requestType, responseCode, System.currentTimeMillis() - start});
         return jsonResponse;
     }
 

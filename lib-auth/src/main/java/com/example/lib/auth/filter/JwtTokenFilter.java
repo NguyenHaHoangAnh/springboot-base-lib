@@ -68,7 +68,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         } else {
             // Nếu ko lấy đc access token -> trả 401 cho FE xử lý
             if (accessToken.isEmpty()) {
-                log.error("[Unauthorize]");
+                log.error("[unauthorize]");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 filterChain.doFilter(request, response);
                 return;
@@ -82,9 +82,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 log.error("[tokenResponseDto]", e);
             }
 
-            // Nếu access token ko hợp lệ -> trả 403 cho FE xử lý
-            if (tokenResponseDto == null || (!tokenResponseDto.isSuccess() && !tokenResponseDto.isForbidden())) {
-                log.error("[Invalid token]");
+            // Nếu access token ko hợp lệ -> trả 401 cho FE xử lý
+            if (tokenResponseDto == null || !tokenResponseDto.isSuccess()) {
+                log.error("[invalid token]");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // Nếu bị chặn -> trả 403 cho FE xử lý
+            if (tokenResponseDto.isForbidden()) {
+                log.error("[forbidden]");
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 filterChain.doFilter(request, response);
                 return;
