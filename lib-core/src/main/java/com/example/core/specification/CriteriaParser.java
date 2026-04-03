@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.example.core.model.Filter;
+import com.example.core.util.DateUtil;
 import com.google.common.base.Joiner;
 
 public class CriteriaParser {
@@ -178,33 +180,33 @@ public class CriteriaParser {
      *   type = 'A'
      *   AND
      */
-//    public Deque<?> parse(Filter[] filters) throws Exception {
-//
-//        Deque<Object> output = new LinkedList<>();
-//
-//        for (int i = 1; i < filters.length + 1; i++) {
-//
-//            Filter item = filters[i - 1];
-//
-//            // nếu là date → convert sang Timestamp
-//            if (item.getType().equalsIgnoreCase("date")) {
-//                item.setValue(DateUtil.getSqlTimestamp(item.getValue().toString()));
-//            }
-//
-//            // push condition
-//            output.push(new SpecSearchCriteria(
-//                    item.getField(),
-//                    item.getType(),
-//                    item.getCompare(),
-//                    item.getValue()
-//            ));
-//
-//            // mặc định nối AND
-//            if (i >= 2) {
-//                output.push(SearchOperation.AND_OPERATOR);
-//            }
-//        }
-//
-//        return output;
-//    }
+    public Deque<?> parse(Filter[] filters) throws Exception {
+
+        Deque<Object> output = new LinkedList<>();
+
+        for (int i = 1; i < filters.length + 1; i++) {
+
+            Filter item = filters[i - 1];
+
+            // nếu là date → convert sang Timestamp
+            if (item.getType().equalsIgnoreCase("date")) {
+                item.setValue(DateUtil.getSqlTimestamp(item.getValue().toString()));
+            }
+
+            // push condition
+            output.push(new SpecSearchCriteria(
+                    item.getField(),
+                    item.getType(),
+                    item.getCompare(),
+                    item.getValue()
+            ));
+
+            // mặc định nối AND
+            if (i >= 2) {
+                output.push(SearchOperation.AND_OPERATOR);
+            }
+        }
+
+        return output;
+    }
 }

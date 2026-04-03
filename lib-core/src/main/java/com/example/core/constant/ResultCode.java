@@ -34,4 +34,15 @@ public enum ResultCode {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
+    public interface Code {
+        String FILTER_FIELD_NULL = "FILTER_FIELD_NULL";
+        String FILTER_FIELD_MAX_LENGTH = "FILTER_FIELD_MAX_LENGTH";
+        String FILTER_TYPE_NULL = "FILTER_TYPE_NULL";
+        String FILTER_TYPE_MAX_LENGTH = "FILTER_TYPE_MAX_LENGTH";
+        String FILTER_COMPARE_NULL = "FILTER_COMPARE_NULL";
+        String FILTER_COMPARE_MAX_LENGTH = "FILTER_COMPARE_MAX_LENGTH";
+        String FILTER_COMPARE_INVALID = "FILTER_COMPARE_INVALID";
+        String FILTER_VALUE_NULL = "FILTER_VALUE_NULL";
+    }
 }
