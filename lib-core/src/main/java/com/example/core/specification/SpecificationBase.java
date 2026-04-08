@@ -72,7 +72,10 @@ public abstract class SpecificationBase<U> implements Specification<U> {
                 }
 
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-                    return builder.equal(root.get(criteria.getKey()).as(Timestamp.class), criteria.getValue());
+//                    return builder.equal(root.get(criteria.getKey()).as(Timestamp.class), criteria.getValue());
+                    Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
+                    Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
+                    return builder.between(root.get(criteria.getKey()).as(Date.class), startOfDay, endOfDay);
                 } else {
                     return builder.equal(root.get(criteria.getKey()), criteria.getValue());
                 }
@@ -82,31 +85,45 @@ public abstract class SpecificationBase<U> implements Specification<U> {
                 }
 
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-                    return builder.notEqual(root.get(criteria.getKey()).as(Timestamp.class), criteria.getValue());
+//                    return builder.notEqual(root.get(criteria.getKey()).as(Timestamp.class), criteria.getValue());
+                    Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
+                    Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
+                    return builder.or(
+                            builder.lessThan(root.get(criteria.getKey()).as(Date.class), startOfDay),
+                            builder.greaterThan(root.get(criteria.getKey()).as(Date.class), endOfDay)
+                    );
                 } else {
                     return builder.notEqual(root.get(criteria.getKey()), criteria.getValue());
                 }
             case GREATER_THAN:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-                    return builder.greaterThan(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.greaterThan(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+                    Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
+                    return builder.greaterThan(root.get(criteria.getKey()).as(Date.class), endOfDay);
                 } else {
                     return builder.greaterThan(root.get(criteria.getKey()), criteria.getValue().toString());
                 }
             case GREATER_THAN_EQUALS:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-                    return builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+                    Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
+                    return builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Date.class), startOfDay);
                 } else {
                     return builder.greaterThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
                 }
             case LESS_THAN:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-                    return builder.lessThan(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.lessThan(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+                    Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
+                    return builder.lessThan(root.get(criteria.getKey()).as(Date.class), startOfDay);
                 } else {
                     return builder.lessThan(root.get(criteria.getKey()), criteria.getValue().toString());
                 }
             case LESS_THAN_EQUALS:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-                    return builder.lessThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.lessThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+                    Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
+                    return builder.lessThanOrEqualTo(root.get(criteria.getKey()).as(Date.class), endOfDay);
                 } else {
                     return builder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
                 }

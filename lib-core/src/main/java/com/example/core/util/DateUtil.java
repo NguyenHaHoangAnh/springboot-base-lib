@@ -16,6 +16,28 @@ import java.util.regex.Pattern;
 public class DateUtil {
     private static String PATTERN_ISO8601 = "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$";
 
+    // Trả về đầu ngày 00:00:00
+    public static Date startOfDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    // Trả về cuối ngày 23:59:59.999
+    public static Date endOfDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+        return cal.getTime();
+    }
+
     public static Date addDay(Date dateInput, int day) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateInput);
