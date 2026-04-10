@@ -78,7 +78,7 @@ public abstract class BaseController<Bean, ID, Repository extends BaseRepo<Bean,
         if (id != null && this.getService().findById(id) != null) {
             Bean currentBean = (Bean) this.getService().findById(id);
             this.merge(bean, currentBean);
-            return this.getService().saveBean(bean) ? ResponseMsg.newOKResponse(currentBean): ResponseMsg.new500ErrorResponse();
+            return this.getService().saveBean(currentBean) ? ResponseMsg.newOKResponse(currentBean): ResponseMsg.new500ErrorResponse();
         }
         return ResponseMsg.newResponse(ResultCode.OBJECT_EXISTED);
     }
