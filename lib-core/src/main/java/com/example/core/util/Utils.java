@@ -14,8 +14,8 @@ public class Utils {
 
     private static Gson getGson(boolean serializeNulls) {
         Gson gson = (new GsonBuilder())
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS") // Thiết lập định dạng giờ
-                .registerTypeAdapter(Date.class, new GsonDateAdapter()) // Đổi kiểu Date
+//                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS") // Thiết lập định dạng giờ
+//                .registerTypeAdapter(Date.class, new GsonDateAdapter()) // Đổi kiểu Date
                 .registerTypeAdapter(
                         (new TypeToken<Map<String, Object>>() {})
                                 .getType(), new MapDeserializerDoubleAsIntFix())
