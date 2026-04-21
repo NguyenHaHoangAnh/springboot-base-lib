@@ -2,10 +2,7 @@ package com.example.core.specification;
 
 import com.example.core.util.DateUtil;
 import com.google.common.collect.Lists;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -64,95 +61,96 @@ public abstract class SpecificationBase<U> implements Specification<U> {
     public Predicate toPredicate(final Root<U> root, final CriteriaQuery<?> query, final CriteriaBuilder builder) {
         boolean isNullValue = criteria.getValue() == null || criteria.getValue().toString().trim().equals("''");
         standardizedValue(criteria);
+        Path path = getPath(root, criteria.getKey());
 
         switch (criteria.getOperation()) {
             case EQUALITY:
                 if (isNullValue) {
-                    return builder.isNull(root.get(criteria.getKey()));
+                    return builder.isNull(path);
                 }
 
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-//                    return builder.equal(root.get(criteria.getKey()).as(Timestamp.class), criteria.getValue());
+//                    return builder.equal(path.as(Timestamp.class), criteria.getValue());
                     Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
                     Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
-                    return builder.between(root.get(criteria.getKey()).as(Date.class), startOfDay, endOfDay);
+                    return builder.between(path.as(Date.class), startOfDay, endOfDay);
                 } else {
-                    return builder.equal(root.get(criteria.getKey()), criteria.getValue());
+                    return builder.equal(path, criteria.getValue());
                 }
             case NEGATION:
                 if (isNullValue) {
-                    return builder.isNotNull(root.get(criteria.getKey()));
+                    return builder.isNotNull(path);
                 }
 
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-//                    return builder.notEqual(root.get(criteria.getKey()).as(Timestamp.class), criteria.getValue());
+//                    return builder.notEqual(path.as(Timestamp.class), criteria.getValue());
                     Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
                     Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
                     return builder.or(
-                            builder.lessThan(root.get(criteria.getKey()).as(Date.class), startOfDay),
-                            builder.greaterThan(root.get(criteria.getKey()).as(Date.class), endOfDay)
+                            builder.lessThan(path.as(Date.class), startOfDay),
+                            builder.greaterThan(path.as(Date.class), endOfDay)
                     );
                 } else {
-                    return builder.notEqual(root.get(criteria.getKey()), criteria.getValue());
+                    return builder.notEqual(path, criteria.getValue());
                 }
             case GREATER_THAN:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-//                    return builder.greaterThan(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.greaterThan(path.as(Timestamp.class), (Timestamp) criteria.getValue());
                     Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
-                    return builder.greaterThan(root.get(criteria.getKey()).as(Date.class), endOfDay);
+                    return builder.greaterThan(path.as(Date.class), endOfDay);
                 } else {
-                    return builder.greaterThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return builder.greaterThan(path, criteria.getValue().toString());
                 }
             case GREATER_THAN_EQUALS:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-//                    return builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.greaterThanOrEqualTo(path.as(Timestamp.class), (Timestamp) criteria.getValue());
                     Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
-                    return builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Date.class), startOfDay);
+                    return builder.greaterThanOrEqualTo(path.as(Date.class), startOfDay);
                 } else {
-                    return builder.greaterThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return builder.greaterThanOrEqualTo(path, criteria.getValue().toString());
                 }
             case LESS_THAN:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-//                    return builder.lessThan(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.lessThan(path.as(Timestamp.class), (Timestamp) criteria.getValue());
                     Date startOfDay = DateUtil.startOfDay((Date) criteria.getValue());
-                    return builder.lessThan(root.get(criteria.getKey()).as(Date.class), startOfDay);
+                    return builder.lessThan(path.as(Date.class), startOfDay);
                 } else {
-                    return builder.lessThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return builder.lessThan(path, criteria.getValue().toString());
                 }
             case LESS_THAN_EQUALS:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
-//                    return builder.lessThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Timestamp) criteria.getValue());
+//                    return builder.lessThanOrEqualTo(path.as(Timestamp.class), (Timestamp) criteria.getValue());
                     Date endOfDay = DateUtil.endOfDay((Date) criteria.getValue());
-                    return builder.lessThanOrEqualTo(root.get(criteria.getKey()).as(Date.class), endOfDay);
+                    return builder.lessThanOrEqualTo(path.as(Date.class), endOfDay);
                 } else {
-                    return builder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return builder.lessThanOrEqualTo(path, criteria.getValue().toString());
                 }
             case LIKE:
-                return builder.like(builder.upper(root.get(criteria.getKey())), criteria.getValue().toString().toUpperCase(), ESCAPE_CHAR);
+                return builder.like(builder.upper(path), criteria.getValue().toString().toUpperCase(), ESCAPE_CHAR);
             case STARTS_WITH:
-                return builder.like(builder.upper(root.get(criteria.getKey())), criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
+                return builder.like(builder.upper(path), criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
             case NOT_STARTS_WITH:
-                return builder.notLike(builder.upper(root.get(criteria.getKey())), criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
+                return builder.notLike(builder.upper(path), criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
             case ENDS_WITH:
-                return builder.like(builder.upper(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toUpperCase(), ESCAPE_CHAR);
+                return builder.like(builder.upper(path), "%" + criteria.getValue().toString().toUpperCase(), ESCAPE_CHAR);
             case NOT_ENDS_WITH:
-                return builder.notLike(builder.upper(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toUpperCase(), ESCAPE_CHAR);
+                return builder.notLike(builder.upper(path), "%" + criteria.getValue().toString().toUpperCase(), ESCAPE_CHAR);
             case CONTAINS:
-                return builder.like(builder.upper(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
+                return builder.like(builder.upper(path), "%" + criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
             case NOT_CONTAINS:
-                return builder.notLike(builder.upper(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
+                return builder.notLike(builder.upper(path), "%" + criteria.getValue().toString().toUpperCase() + "%", ESCAPE_CHAR);
             case IN:
             case NOT_IN:
                 if (criteria.getType() != null && "date".equalsIgnoreCase(criteria.getType())) {
                     Date endDate = DateUtil.addDay((Date) criteria.getValue(), 1);
                     Predicate p1, p2;
                     if (criteria.getOperation().equals(SearchOperation.IN)) {
-                        p1 = builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), (Date) criteria.getValue());
-                        p2 = builder.lessThan(root.get(criteria.getKey()).as(Timestamp.class), endDate);
+                        p1 = builder.greaterThanOrEqualTo(path.as(Timestamp.class), (Date) criteria.getValue());
+                        p2 = builder.lessThan(path.as(Timestamp.class), endDate);
                         return builder.and(p1, p2);
                     } else {
-                        p1 = builder.lessThan(root.get(criteria.getKey()).as(Timestamp.class), (Date) criteria.getValue());
-                        p2 = builder.greaterThanOrEqualTo(root.get(criteria.getKey()).as(Timestamp.class), endDate);
+                        p1 = builder.lessThan(path.as(Timestamp.class), (Date) criteria.getValue());
+                        p2 = builder.greaterThanOrEqualTo(path.as(Timestamp.class), endDate);
                         return builder.or(p1, p2);
                     }
 
@@ -165,19 +163,19 @@ public abstract class SpecificationBase<U> implements Specification<U> {
                         for (List<String> smallerList : smallerLists) {
                             List listIn = new ArrayList();
                             for (String s : smallerList) {
-                                if (root.get(criteria.getKey()).getJavaType().equals(String.class)) {
+                                if (path.getJavaType().equals(String.class)) {
                                     listIn.add(s);
-                                } else if (root.get(criteria.getKey()).getJavaType().equals(Long.class)) {
+                                } else if (path.getJavaType().equals(Long.class)) {
                                     listIn.add(Long.valueOf(s));
-                                } else if (root.get(criteria.getKey()).getJavaType().equals(Integer.class)) {
+                                } else if (path.getJavaType().equals(Integer.class)) {
                                     listIn.add(Integer.valueOf(s));
                                 }
                             }
 
                             if (criteria.getOperation().equals(SearchOperation.IN)) {
-                                predicates.add(builder.in(root.get(criteria.getKey())).value(castToRequiredType(root.get(criteria.getKey()).getJavaType(), listIn)));
+                                predicates.add(builder.in(path).value(castToRequiredType(path.getJavaType(), listIn)));
                             } else {
-                                predicates.add(builder.in(root.get(criteria.getKey())).value(castToRequiredType(root.get(criteria.getKey()).getJavaType(), listIn)).not());
+                                predicates.add(builder.in(path).value(castToRequiredType(path.getJavaType(), listIn)).not());
                             }
                         }
                     }
@@ -227,5 +225,21 @@ public abstract class SpecificationBase<U> implements Specification<U> {
             return Enum.valueOf(fieldType, value);
         }
         return value;
+    }
+
+    // helper method xử lý truy cập field lồng nhau trong JPA Criteria (user.address.city)
+    private Path<?> getPath(Root<?> root, String key) {
+        if (!key.contains(".")) {
+            return root.get(key);
+        }
+
+        String[] parts = key.split("\\.");
+        From<?, ?> join = root;
+
+        for (int i = 0; i < parts.length - 1; i++) {
+            join = join.join(parts[i], JoinType.LEFT);
+        }
+
+        return join.get(parts[parts.length - 1]);
     }
 }
