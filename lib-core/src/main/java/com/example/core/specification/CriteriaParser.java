@@ -172,13 +172,13 @@ public class CriteriaParser {
      * Input:
      * filters = [
      *   { field: "status", compare: "in", value: [1,2] },
-     *   { field: "type", compare: "equals", value: "A" }
+     *   { field: "type", compare: "equals", value: "A", operator: "AND/OR" }
      * ]
      *
      * Output:
      *   status IN (...)
      *   type = 'A'
-     *   AND
+     *   AND/OR
      */
     public Deque<?> parse(Filter[] filters) throws Exception {
 
@@ -203,7 +203,12 @@ public class CriteriaParser {
 
             // mặc định nối AND
             if (i >= 2) {
-                output.push(SearchOperation.AND_OPERATOR);
+                String operator = item.getOperator();
+                if (operator != null && operator.equalsIgnoreCase(SearchOperation.OR_OPERATOR)) {
+                    output.push(SearchOperation.OR_OPERATOR);
+                } else {
+                    output.push(SearchOperation.AND_OPERATOR);
+                }
             }
         }
 

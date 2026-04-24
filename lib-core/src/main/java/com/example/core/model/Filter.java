@@ -28,8 +28,16 @@ public class Filter implements Serializable {
     @Pattern(regexp = "(startsWith|STARTSWITH|endsWith|ENDSWITH|contains|CONTAINS|lt|LT|lte|LTE|gt|GT|gte|GTE|equals|EQUALS|neq|NEQ|in|IN)", message = ResultCode.Code.FILTER_COMPARE_INVALID)
     private String compare;
 
+    @Size(max = 50, message = ResultCode.Code.FILTER_OPERATOR_MAX_LENGTH)
+    @Pattern(regexp = "(and|AND|or|OR)", message = ResultCode.Code.FILTER_OPERATOR_INVALID)
+    private String operator;
+
     public String getCompare() {
         return compare.toLowerCase();
+    }
+
+    public String getOperator() {
+        return operator.toLowerCase();
     }
 
     @NotNull(message = ResultCode.Code.FILTER_VALUE_NULL)
